@@ -1,36 +1,3 @@
-vim.g.mapleader = " "
-
-vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
-
-vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
-vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
-
-vim.opt.nu = true
-vim.opt.relativenumber = true
-
-vim.opt.tabstop = 4
-vim.opt.shiftwidth = 4
-
-vim.opt.smartindent = true
-
-vim.opt.wrap = false
-
-vim.opt.hlsearch = false
-vim.opt.incsearch = true
-
-vim.opt.termguicolors = true
-
-vim.opt.scrolloff = 8
-vim.opt.signcolumn = "yes"
-
-vim.opt.isfname:append("@-@")
-
-vim.opt.updatetime = 50
-
-vim.opt.colorcolumn = "80"
-
-vim.g.mapleader = " "
-
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
 if not vim.loop.fs_stat(lazypath) then
@@ -39,11 +6,136 @@ if not vim.loop.fs_stat(lazypath) then
 		"clone",
 		"--filter=blob:none",
 		"https://github.com/folke/lazy.nvim.git",
-		"--branch=stable", -- latest stable release
+		"--branch=stable",
 		lazypath,
 	})
 end
 
 vim.opt.rtp:prepend(lazypath)
 
-require("lazy").setup("eggbert.plugins")
+require("lazy").setup({
+	{
+		"ellisonleao/gruvbox.nvim",
+		priority = 1000,
+		config = function()
+			vim.cmd([[colorscheme gruvbox]])
+		end,
+	},
+	{
+		'nvim-telescope/telescope.nvim',
+		tag = '0.1.5',
+		dependencies = { 'nvim-lua/plenary.nvim' },
+		config = (function()
+			local builtin = require('telescope.builtin')
+
+			require("telescope").setup{
+				defaults = {
+					mappings = {
+						i = {
+							["<C-h>"] = "which_key",
+							["<C-k>"] = "move_selection_previous",
+							["<C-j>"] = "move_selection_next"
+						}
+					}
+				}
+			}
+
+			vim.keymap.set('n', '<leader>pf', builtin.find_files, {})
+			vim.keymap.set('n', '<leader>ps', function() 
+				builtin.grep_string({ search = vim.fn.input("Grep > ")})
+			end)
+		end),
+	},
+	{
+		"nvim-treesitter/nvim-treesitter",
+		build = ":TSUpdate",
+		config = (function() 
+			local configs = require("nvim-treesitter.configs")
+			configs.setup({
+				ensure_installed = { "c", "cpp", "lua", "vim", "javascript", "html", "typescript", "css" },
+				sync_install = false,
+				highlight = { enable = true },
+				indent = { enable = true },  
+			})
+		end)
+	},
+	{
+		"folke/which-key.nvim",
+		event = "VeryLazy",
+		init = function()
+			vim.o.timeout = true
+			vim.o.timeoutlen = 300
+		end,
+		opts = {
+			presets = {
+				operators = true,
+				text_objects = true,
+				windows = true,
+				nav = true,
+				z = true,
+				g = true,
+			},
+			icons = {
+				breadcrumb = "»", -- symbol used in the command line area that shows your active key combo
+			},
+		},
+	},
+	{
+		'altermo/ultimate-autopair.nvim',
+		event={'InsertEnter','CmdlineEnter'},
+		branch='v0.6',
+	},
+	{ 'lewis6991/gitsigns.nvim' },
+	{ "lukas-reineke/indent-blankline.nvim" },
+	{
+		'numToStr/Comment.nvim',
+		lazy = false,
+	},
+	{
+		'VonHeikemen/lsp-zero.nvim',
+		branch = 'v2.x',
+		dependencies = {
+			-- LSP Support
+			{'neovim/nvim-lspconfig'},
+			{'williamboman/mason.nvim'},
+			{'williamboman/mason-lspconfig.nvim'},
+			{'hrsh7th/nvim-cmp'},
+			{'hrsh7th/cmp-nvim-lsp'},
+			{'L3MON4D3/LuaSnip'},
+		},
+		config = function()
+			local lsp = require('lsp-zero').preset({})
+
+			lsp.on_attach(function(client, bufnr)
+				lsp.default_keymaps({buffer = bufnr})
+			end)
+
+			lsp.setup()
+		end,
+	},
+	{
+		"ThePrimeagen/harpoon",
+		branch = "harpoon2",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		config = function()
+			local harpoon = require("harpoon")
+
+			harpoon:setup()
+
+			vim.keymap.set("n", "<leader>a", function() harpoon:list():append() end)
+			vim.keymap.set("n", "<C-e>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
+
+			vim.keymap.set("n", "<C-k>", function() harpoon:list():prev() end)
+			vim.keymap.set("n", "<C-j>", function() harpoon:list():next() end)
+		end,
+	},
+	{
+		'nvim-lualine/lualine.nvim',
+		dependencies = { 'nvim-tree/nvim-web-devicons' },
+		config = function()
+			require("lualine").setup({
+				options = { theme = 'gruvbox' }
+			})
+		end,
+	}
+})
