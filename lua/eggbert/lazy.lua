@@ -5,9 +5,7 @@ if not vim.loop.fs_stat(lazypath) then
 		"git",
 		"clone",
 		"--filter=blob:none",
-		"https://github.com/folke/lazy.nvim.git",
-		"--branch=stable",
-		lazypath,
+		"https://github.com/folke/lazy.nvim.git", "--branch=stable", lazypath,
 	})
 end
 
@@ -90,6 +88,9 @@ require("lazy").setup({
 	{
 		'numToStr/Comment.nvim',
 		lazy = false,
+		config = function()
+			require("Comment").setup()
+		end,
 	},
 	{
 		'VonHeikemen/lsp-zero.nvim',
@@ -105,10 +106,19 @@ require("lazy").setup({
 		},
 		config = function()
 			local lsp = require('lsp-zero').preset({})
+			local cmp = require("cmp")
 
 			lsp.on_attach(function(client, bufnr)
 				lsp.default_keymaps({buffer = bufnr})
 			end)
+
+			cmp.setup({
+				mapping={
+					['<C-k>'] = cmp.mapping.select_prev_item(),
+					['<C-j>'] = cmp.mapping.select_next_item(),
+					['<Tab>'] = cmp.mapping.confirm({select = true}),
+				}
+			})
 
 			lsp.setup()
 		end,
@@ -136,6 +146,26 @@ require("lazy").setup({
 			require("lualine").setup({
 				options = { theme = 'gruvbox' }
 			})
+		end,
+	},
+	{ 'eandrju/cellular-automaton.nvim' },
+	{
+		'mbbill/undotree',
+		config = function()
+			vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle)
+		end,
+	},
+	{
+    	'tamton-aquib/duck.nvim',
+    	config = function()
+        	vim.keymap.set('n', '<leader>dd', function() require("duck").hatch() end, {})
+        	vim.keymap.set('n', '<leader>dk', function() require("duck").cook() end, {})
+    	end
+	},
+	{
+		'windwp/nvim-autopairs',
+		config = function()
+			require("nvim-autopairs").setup()
 		end,
 	}
 })
