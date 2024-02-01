@@ -7,9 +7,7 @@ if not vim.loop.fs_stat(lazypath) then
 		"--filter=blob:none",
 		"https://github.com/folke/lazy.nvim.git", "--branch=stable", lazypath,
 	})
-end
-
-vim.opt.rtp:prepend(lazypath)
+end vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
 	{
@@ -168,5 +166,18 @@ require("lazy").setup({
 			require("nvim-autopairs").setup()
 		end,
 	},
-	{ "alec-gibson/nvim-tetris" }
+	{ "alec-gibson/nvim-tetris" },
+	{
+		"folke/zen-mode.nvim",
+		config = function() 
+			vim.keymap.set('n', '<leader>zm', function() vim.cmd.ZenMode() end, {})
+		end,
+	},
+	{
+		"folke/trouble.nvim",
+		dependencies = { "nvim-tree/nvim-web-devicons" },
+		config = function()
+			vim.keymap.set("n", "<leader>ce", function() require("trouble").toggle() end)
+		end,
+	}
 })
