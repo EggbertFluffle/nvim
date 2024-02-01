@@ -167,5 +167,6 @@ require("lazy").setup({
 		config = function()
 			require("nvim-autopairs").setup()
 		end,
-	}
+	},
+	{ "alec-gibson/nvim-tetris" }
 })
