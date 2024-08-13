@@ -12,7 +12,10 @@ end vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
 	{
 		"ellisonleao/gruvbox.nvim",
-		priority = 1000,
+		opts = {
+			priority = 1000,
+			transparent_mode = true
+		},
 		config = function()
 			vim.cmd([[colorscheme gruvbox]])
 		end,
@@ -45,44 +48,21 @@ require("lazy").setup({
 	{
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
-		config = (function() 
+		config = function()
 			local configs = require("nvim-treesitter.configs")
 			configs.setup({
 				ensure_installed = { "c", "cpp", "lua", "vim", "javascript", "html", "typescript", "css" },
 				sync_install = false,
 				highlight = { enable = true },
-				indent = { enable = true },  
+				indent = { enable = true },
 			})
-		end)
-	},
-	{
-		"folke/which-key.nvim",
-		event = "VeryLazy",
-		init = function()
-			vim.o.timeout = true
-			vim.o.timeoutlen = 300
-		end,
-		opts = {
-			presets = {
-				operators = true,
-				text_objects = true,
-				windows = true,
-				nav = true,
-				z = true,
-				g = true,
-			},
-			icons = {
-				breadcrumb = "»", -- symbol used in the command line area that shows your active key combo
-			},
-		},
+		end
 	},
 	{
 		'altermo/ultimate-autopair.nvim',
 		event={'InsertEnter','CmdlineEnter'},
 		branch='v0.6',
 	},
-	{ 'lewis6991/gitsigns.nvim' },
-	{ "lukas-reineke/indent-blankline.nvim" },
 	{
 		'numToStr/Comment.nvim',
 		lazy = false,
@@ -146,7 +126,6 @@ require("lazy").setup({
 			})
 		end,
 	},
-	{ 'eandrju/cellular-automaton.nvim' },
 	{
 		'mbbill/undotree',
 		config = function()
@@ -154,30 +133,60 @@ require("lazy").setup({
 		end,
 	},
 	{
-    	'tamton-aquib/duck.nvim',
-    	config = function()
-        	vim.keymap.set('n', '<leader>dd', function() require("duck").hatch() end, {})
-        	vim.keymap.set('n', '<leader>dk', function() require("duck").cook() end, {})
-    	end
-	},
-	{
-		'windwp/nvim-autopairs',
-		config = function()
-			require("nvim-autopairs").setup()
-		end,
-	},
-	{ "alec-gibson/nvim-tetris" },
-	{
-		"folke/zen-mode.nvim",
-		config = function() 
-			vim.keymap.set('n', '<leader>zm', function() vim.cmd.ZenMode() end, {})
-		end,
-	},
-	{
 		"folke/trouble.nvim",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 		config = function()
-			vim.keymap.set("n", "<leader>ce", function() require("trouble").toggle() end)
+			vim.keymap.set("n", "<leader>ce", function() require("trouble").toggle("diagnostics") end)
+			vim.keymap.set("n", "<leader>cs", function() require("trouble").toggle("symbols") end)
 		end,
+	},
+	{
+		"NStefan002/donut.nvim",
+		version = "*",
+		lazy = false,
+		config = function()
+			require("donut").setup({
+				timeout = 60
+			})
+		end,
+	},
+	{
+		"nvim-neorg/neorg",
+		lazy = false,
+		version = "*",
+		config = function()
+			require("neorg").setup {
+				load = {
+					["core.defaults"] = {},
+					["core.concealer"] = {},
+					["core.dirman"] = {
+						config = {
+							workspaces = {
+								notes = "~/notes",
+							},
+							default_workspace = "notes",
+						},
+					},
+					["core.export"] = {},
+					["core.export.markdown"] = {}
+				},
+			}
+
+			vim.wo.foldlevel = 99
+			vim.wo.conceallevel = 2
+		end,
+	},
+	{
+		'stevearc/oil.nvim',
+		dependencies = { "nvim-tree/nvim-web-devicons" },
+		opts = {},
+		config = function()
+			require("oil").setup({
+				view_options = {
+					show_hidden = true,
+					natural_order = true,
+				},
+			})
+		end
 	}
 })
