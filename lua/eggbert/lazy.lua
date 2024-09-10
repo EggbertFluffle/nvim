@@ -59,9 +59,10 @@ require("lazy").setup({
 		end
 	},
 	{
-		'altermo/ultimate-autopair.nvim',
-		event={'InsertEnter','CmdlineEnter'},
-		branch='v0.6',
+		'windwp/nvim-autopairs',
+		config = function()
+			require("nvim-autopairs").setup()
+		end,
 	},
 	{
 		'numToStr/Comment.nvim',
@@ -146,7 +147,7 @@ require("lazy").setup({
 		lazy = false,
 		config = function()
 			require("donut").setup({
-				timeout = 60
+				timeout = 180
 			})
 		end,
 	},
@@ -188,5 +189,12 @@ require("lazy").setup({
 				},
 			})
 		end
+	},
+	{
+		"github/copilot.vim",
+		config = function()
+			vim.g.copilot_enable = false
+			vim.cmd("Copilot disable")
+		end,
 	}
 })
