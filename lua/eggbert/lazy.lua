@@ -12,11 +12,8 @@ end vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
 	{
 		"ellisonleao/gruvbox.nvim",
-		opts = {
-			priority = 1000,
-			transparent_mode = true
-		},
 		config = function()
+			require("gruvbox").setup({ })
 			vim.cmd([[colorscheme gruvbox]])
 		end,
 	},
@@ -31,7 +28,6 @@ require("lazy").setup({
 				defaults = {
 					mappings = {
 						i = {
-							["<C-h>"] = "which_key",
 							["<C-k>"] = "move_selection_previous",
 							["<C-j>"] = "move_selection_next"
 						}
@@ -40,7 +36,7 @@ require("lazy").setup({
 			}
 
 			vim.keymap.set('n', '<leader>pf', builtin.find_files, {})
-			vim.keymap.set('n', '<leader>ps', function() 
+			vim.keymap.set('n', '<leader>ps', function()
 				builtin.grep_string({ search = vim.fn.input("Grep > ")})
 			end)
 		end),
@@ -111,7 +107,7 @@ require("lazy").setup({
 
 			harpoon:setup()
 
-			vim.keymap.set("n", "<leader>a", function() harpoon:list():append() end)
+			vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end)
 			vim.keymap.set("n", "<C-e>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
 
 			vim.keymap.set("n", "<C-k>", function() harpoon:list():prev() end)
@@ -125,12 +121,6 @@ require("lazy").setup({
 			require("lualine").setup({
 				options = { theme = 'gruvbox' }
 			})
-		end,
-	},
-	{
-		'mbbill/undotree',
-		config = function()
-			vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle)
 		end,
 	},
 	{
@@ -149,32 +139,6 @@ require("lazy").setup({
 			require("donut").setup({
 				timeout = 180
 			})
-		end,
-	},
-	{
-		"nvim-neorg/neorg",
-		lazy = false,
-		version = "*",
-		config = function()
-			require("neorg").setup {
-				load = {
-					["core.defaults"] = {},
-					["core.concealer"] = {},
-					["core.dirman"] = {
-						config = {
-							workspaces = {
-								notes = "~/notes",
-							},
-							default_workspace = "notes",
-						},
-					},
-					["core.export"] = {},
-					["core.export.markdown"] = {}
-				},
-			}
-
-			vim.wo.foldlevel = 99
-			vim.wo.conceallevel = 2
 		end,
 	},
 	{
