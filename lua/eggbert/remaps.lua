@@ -7,18 +7,45 @@ vim.keymap.set("n", "<leader>cc", ":!make")
 vim.keymap.set("n", "<leader>cr", ":!make && ./main")
 vim.keymap.set("n", "<leader>cl", ":!pdflatex main.tex")
 
--- Gross ass autorun command 
+vim.keymap.set("v", "<C-/>", "yq/p<Enter>N")
+
+vim.keymap.set("n", "<C-S-Enter>", function ()
+	local terminalCmd = "alacritty --command "
+	local runScriptsPath = "/home/eggbert/.config/nvim/lua/eggbert/scripts/"
+
+	local fileName = string.lower(vim.fn.expand("%"))
+	local fileExtension = string.lower(fileName.sub(fileName, string.len(fileName) - 2, string.len(fileName)))
+
+	if (fileExtension == "zig") then -- RUN LUA CODE
+		os.execute(terminalCmd .. runScriptsPath .. "zigtest.sh " .. fileName)
+	else
+		print("ion know whut da phuq to do wit dis")
+	end
+end)
+
 vim.keymap.set("n", "<C-Enter>", function ()
 	local terminalCmd = "alacritty --command "
-	local runScriptsPath = "/home/eggbert/.config/nvim/lua/eggbert/"
+	local runScriptsPath = "/home/eggbert/.config/nvim/lua/eggbert/scripts/"
 
-	local fileName = vim.fn.expand("%")
-	local fileExtension = fileName.sub(fileName, string.len(fileName) - 3, string.len(fileName))
+	local fileName = string.lower(vim.fn.expand("%"))
+	local fileExtension = string.lower(fileName.sub(fileName, string.len(fileName) - 2, string.len(fileName)))
 
-	if fileExtension == "java" then
-		os.execute(terminalCmd .. runScriptsPath .. "java.sh " .. fileName)
+	if fileExtension == "ava" then -- RUN JAVA CODE
+		if (string.find(fileName, "test") == nil) then
+			print("RUN JAVA")
+			os.execute(terminalCmd .. runScriptsPath .. "javarun.sh &")
+		else
+			print("RUN TESTS")
+			os.execute(terminalCmd .. runScriptsPath .. "javatest.sh &")
+		end
+	elseif (fileExtension == "cpp" or fileExtension == "hpp" or string.sub(fileExtension, -1) == "c") then -- RUN C++ AND C
+		os.execute(terminalCmd .. runScriptsPath .. "cpp.sh &")
+	elseif (fileExtension == "lua") then -- RUN LUA CODE
+		os.execute(terminalCmd .. runScriptsPath .. "lua.sh " .. fileName)
+	elseif (fileExtension == "zig") then -- RUN LUA CODE
+		os.execute(terminalCmd .. runScriptsPath .. "zigrun.sh " .. fileName)
 	else
-		os.execute(terminalCmd .. runScriptsPath .. "cpp.sh")
+		print("ion know whut da phuq to do wit dis")
 	end
 end)
 
@@ -27,9 +54,9 @@ vim.api.nvim_create_autocmd({'BufWritePost'}, {
 	command = "!pdflatex main.tex"
 })
 
-vim.keymap.set("n", "j", "gj")
-vim.keymap.set("n", "k", "gk")
-vim.keymap.set("n", "<C-j>", "5j");
-vim.keymap.set("n", "<C-k>", "5k");
+vim.keymap.set({"n", "v"}, "j", "gj")
+vim.keymap.set({"n", "v"}, "k", "gk")
 
 vim.keymap.set("i", "<C-Backspace>", "<C-w>")
+vim.keymap.set({"i", "n"}, "<C-a>", "<C-c>ggVG");
+vim.keymap.set("n", "C", "ciw")

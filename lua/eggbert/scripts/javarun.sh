@@ -1,9 +1,8 @@
 #!/bin/bash
 
 pwd
-make
 echo "-------------------------------"
-./main
+"./run.sh"
 echo "-------------------------------"
 echo "close?"
 bash
