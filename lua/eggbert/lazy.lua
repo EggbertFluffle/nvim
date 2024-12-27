@@ -14,7 +14,7 @@ require("lazy").setup({
 		"ellisonleao/gruvbox.nvim",
 		config = function()
 			require("gruvbox").setup({ })
-			vim.cmd([[colorscheme gruvbox]])
+			vim.cmd("colorscheme gruvbox")
 		end,
 	},
 	{
@@ -98,12 +98,12 @@ require("lazy").setup({
 			local lsp = require("lsp-zero").preset({})
 			local cmp = require("cmp")
 
-			lsp.on_attach(function(client, bufnr)
-				lsp.default_keymaps({buffer = bufnr})
+			lsp.on_attach(function(_, buf)
+				lsp.default_keymaps({buffer = buf})
 			end)
 
 			cmp.setup({
-				mapping={
+				mapping = {
 					["<C-k>"] = cmp.mapping.select_prev_item(),
 					["<C-j>"] = cmp.mapping.select_next_item(),
 					["<Tab>"] = cmp.mapping.confirm({select = true}),
@@ -160,15 +160,12 @@ require("lazy").setup({
 	{
 		"stevearc/oil.nvim",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
-		opts = {},
-		config = function()
-			require("oil").setup({
-				view_options = {
-					show_hidden = true,
-					natural_order = true,
-				},
-			})
-		end
+		opts = {
+			view_options = {
+				show_hidden = true,
+				natural_order = true,
+			},
+		},
 	},
 	{
 		"github/copilot.vim",
@@ -178,35 +175,21 @@ require("lazy").setup({
 		end,
 	},
 	{
-		"gaborvecsei/usage-tracker.nvim",
-		config = function()
-			require('usage-tracker').setup({
-				keep_eventlog_days = 365,
-				cleanup_freq_days = 7,
-				event_wait_period_in_sec = 3,
-				inactivity_threshold_in_min = 5,
-				inactivity_check_freq_in_sec = 5,
-				verbose = 0,
-			})
-		end
-	},
-	{
 		dir = "/home/eggbert/programs/lua/beepboop.nvim",
-		config = function()
-			require("beepboop").setup({
-				audio_player = "ffplay",
-				sound_directory = "/home/eggbert/.config/nvim/lua/eggbert/sounds/",
-				sound_enabled = true,
-				volume = 1.0,
-				sound_map = {
-					["VimEnter"] = {"chestopen.oga"},
-					["VimLeave"] = {"chestclosed.oga"},
-					["InsertCharPre"] = {"stone1.oga", "stone2.oga", "stone3.oga", "stone4.oga"},
-					["TextYankPost"] = {"hit1.oga", "hit2.oga", "hit3.oga"},
-					["BufWrite"] = {"open_flip1.oga", "open_flip2.oga", "open_flip3.oga"},
-					-- ["InsertCharPre"] = {"vineboom.mp3"},
-				}
-			})
-		end
+		opts = {
+			audio_player = "paplay",
+			volume = 100,
+			sound_directory = "/home/eggbert/.config/nvim/sounds",
+			sound_map = {
+				{ key_map = { mode = "n", key_chord = "<leader>pv" }, sound = "chestopen.oga" },
+				{ key_map = { mode = "n", key_chord = "<C-Enter>" }, sound = "chestopen.oga" },
+				{ auto_command = "VimEnter", sound = "chestopen.oga" },
+				{ auto_command = "VimLeave", sound = "chestclosed.oga" },
+				{ auto_command = "InsertCharPre", sounds = {"stone1.oga", "stone2.oga", "stone3.oga", "stone4.oga"} },
+				{ auto_command = "TextYankPost", sounds = {"hit1.oga", "hit2.oga", "hit3.oga"} },
+				{ auto_command = "BufWrite", sounds = {"open_flip1.oga", "open_flip2.oga", "open_flip3.oga"} },
+			}
+		}
 	}
 })
+

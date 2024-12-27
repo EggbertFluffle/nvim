@@ -9,21 +9,9 @@ vim.keymap.set("n", "<leader>cl", ":!pdflatex main.tex")
 
 vim.keymap.set("v", "<C-/>", "yq/p<Enter>N")
 
-vim.keymap.set("n", "<C-S-Enter>", function ()
-	local terminalCmd = "alacritty --command "
-	local runScriptsPath = "/home/eggbert/.config/nvim/lua/eggbert/scripts/"
-
-	local fileName = string.lower(vim.fn.expand("%"))
-	local fileExtension = string.lower(fileName.sub(fileName, string.len(fileName) - 2, string.len(fileName)))
-
-	if (fileExtension == "zig") then -- RUN LUA CODE
-		os.execute(terminalCmd .. runScriptsPath .. "zigtest.sh " .. fileName)
-	else
-		print("ion know whut da phuq to do wit dis")
-	end
-end)
-
 vim.keymap.set("n", "<C-Enter>", function ()
+	require("beepboop").play_audio("runprogram")
+
 	local terminalCmd = "alacritty --command "
 	local runScriptsPath = "/home/eggbert/.config/nvim/lua/eggbert/scripts/"
 
@@ -49,14 +37,20 @@ vim.keymap.set("n", "<C-Enter>", function ()
 	end
 end)
 
-vim.api.nvim_create_autocmd({'BufWritePost'}, {
-	pattern = "*.tex",
-	command = "!pdflatex main.tex"
-})
-
 vim.keymap.set({"n", "v"}, "j", "gj")
 vim.keymap.set({"n", "v"}, "k", "gk")
 
 vim.keymap.set("i", "<C-Backspace>", "<C-w>")
-vim.keymap.set({"i", "n"}, "<C-a>", "<C-c>ggVG");
+vim.keymap.set({"i", "n"}, "<C-a>", "<C-c>ggVG")
 vim.keymap.set("n", "C", "ciw")
+
+zig_buf_write_ERRADICATED = false
+vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+	pattern = {"*.zig"},
+	callback = function(_)
+		if not zig_buf_write_ERRADICATED then
+			zig_buf_write_ERRADICATED = true
+			vim.api.nvim_del_augroup_by_name("vim-zig")
+		end
+	end,
+})
