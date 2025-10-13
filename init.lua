@@ -1,3 +1,4 @@
-require("eggbert.options")
-require("eggbert.remaps")
-require("eggbert.lazy")
+require("options")
+require("plugins")
+require("remaps")
+require("autocmd")
