@@ -19,7 +19,7 @@ vim.o.pumborder = "+,-,+,|,+,-,+,|"
 vim.o.pumheight = 15
 vim.o.signcolumn = "yes"
 vim.o.scrolloff = 8
-vim.o.sidescrolloff = 8
+vim.o.sidescrolloff = 16
 vim.o.wrap = false
 
 vim.o.swapfile = false

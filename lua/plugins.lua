@@ -14,8 +14,8 @@ require("snacks").setup({
 			input = {
 				keys = {
 					["<Esc>"] = { "close", mode = { "n", "i" } },
-					["<C-j>"] = { "list_down", mode = { "i", "n" } },
-					["<C-k>"] = { "list_up", mode = { "i", "n" } },
+					["<C-j>"] = { "list_down", mode = { "n", "i" } },
+					["<C-k>"] = { "list_up", mode = { "n", "i" } },
 				}
 			}
 		}
@@ -25,9 +25,9 @@ require("snacks").setup({
 local picker = require("snacks").picker;
 vim.keymap.set("n", "<leader>pf", function () picker.files() end)
 vim.keymap.set("n", "<leader>ps", function () picker.grep() end)
-vim.keymap.set("n", "<leader>pb", function () picker.buffers() end)
 vim.keymap.set("n", "<leader>pk", function () picker.keymaps() end)
-vim.keymap.set("n", "<leader>pi", function () picker().icons() end)
+vim.keymap.set("n", "<leader>pi", function () picker.icons() end)
+
 vim.keymap.set("n", "<leader>pp", function () picker() end)
 
 -------------------- Trouble --------------------
@@ -101,7 +101,8 @@ require("nvim-treesitter.configs").setup({
 		"html",
 		"typescript",
 		"css",
-		"zig"
+		"zig",
+		"typst"
 	},
 	sync_install = false,
 	highlight = { enable = true },
@@ -110,7 +111,6 @@ require("nvim-treesitter.configs").setup({
 
 -------------------- LSP --------------------
 vim.pack.add({ "https://github.com/neovim/nvim-lspconfig" })
-
 vim.lsp.enable({
 	"lua_ls",
 	"zls",
@@ -120,6 +120,12 @@ vim.lsp.enable({
 	"typescript-langauge-server"
 })
 vim.lsp.log_levels = "off"
+
+vim.keymap.set("n", "gD", picker.lsp_declarations)
+vim.keymap.set("n", "gd", picker.lsp_definitions)
+vim.keymap.set("n", "gi", picker.lsp_implementations)
+vim.keymap.set("n", "gr", picker.lsp_references)
+vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename)
 
 -- vim.api.nvim_create_autocmd('LspAttach', {
 -- 	group = vim.api.nvim_create_augroup('my.lsp', {}),
@@ -178,9 +184,7 @@ require("blink.cmp").setup({
 	completion = {
 		documentation = {
 			auto_show = true,
-			window = { border = "single" }
 		},
-		menu = { border = "single" },
 	},
 	keymap = {
 		preset = "none",
