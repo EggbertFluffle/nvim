@@ -86,6 +86,9 @@ vim.pack.add({ "https://github.com/OXY2DEV/markview.nvim" })
 require("markview").setup({
 	preview = {
 		enable = true,
+	},
+	typst = {
+		enabled = false,
 	}
 })
 
@@ -117,9 +120,18 @@ vim.lsp.enable({
 	"clangd",
 	"svelte-language-server",
 	"tinymist",
-	"typescript-langauge-server"
+	"typescript-langauge-server",
+	-- "harper_ls"
 })
 vim.lsp.log_levels = "off"
+
+-- vim.lsp.config('harper_ls', {
+-- 	settings = {
+-- 		["harper-ls"] = {
+-- 			userDictPath = "~/dict.txt"
+-- 		}
+-- 	},
+-- })
 
 vim.keymap.set("n", "gD", picker.lsp_declarations)
 vim.keymap.set("n", "gd", picker.lsp_definitions)
@@ -181,6 +193,7 @@ vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename)
 -------------------- Blink.cmp --------------------
 vim.pack.add({ "https://github.com/saghen/blink.cmp" })
 require("blink.cmp").setup({
+	build = "cargo --release build",
 	completion = {
 		documentation = {
 			auto_show = true,
@@ -199,3 +212,10 @@ require("blink.cmp").setup({
 -------------------- Typst Preview --------------------
 vim.pack.add({ "https://github.com/chomosuke/typst-preview.nvim" })
 require("typst-preview").setup()
+
+-------------------- Ethersync --------------------
+-- vim.pack.add({ "https://github.com/ethersync/ethersync-nvim" })
+--
+-- vim.keymap.set('n', '<leader>ej', '<cmd>EthersyncJumpToCursor<cr>')
+-- vim.keymap.set('n', '<leader>ef', '<cmd>EthersyncFollow<cr>')
+-- vim.keymap.set('n', '<esc>', '<cmd>EthersyncUnfollow<cr>')

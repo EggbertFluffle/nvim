@@ -17,14 +17,19 @@ vim.keymap.set("n", "<C-Enter>", function ()
 		hpp = "make.sh",
 		h = "make.sh",
 
-		zig = "zigrun.sh",
+		zig = "zig.sh",
+
+		python = "python.sh"
 	}
 
 	local scripts_dir = vim.fn.stdpath("config") .. "/scripts/"
 	local filetype = vim.bo.filetype
 	local filename = vim.fn.expand("%s")
 
-	vim.uv.spawn("alacritty", {
+	vim.print(scripts_dir .. lookup[filetype])
+	vim.print(os.getenv("TERM") or "alacritty")
+
+	vim.uv.spawn(os.getenv("TERM") or "alacritty", {
 		detached = true,
 		args = { "--command", scripts_dir .. lookup[filetype], filename }
 	}, function () end)
