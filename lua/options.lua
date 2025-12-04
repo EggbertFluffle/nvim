@@ -25,3 +25,11 @@ vim.o.wrap = false
 vim.o.swapfile = false
 vim.o.backup = false
 vim.o.undofile = true
+
+vim.api.nvim_create_user_command("RandomChar", function () 
+	local line = ""
+	for j=0,200 do
+		line = line .. string.char(math.random(33, 126))
+	end
+	vim.api.nvim_set_current_line(line)
+end, {})

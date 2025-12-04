@@ -12,22 +12,33 @@ vim.keymap.set("n", "<C-Enter>", function ()
 	local lookup = {
 		lua = "lua.sh",
 
-		cpp = "make.sh",
-		c = "make.sh",
-		hpp = "make.sh",
-		h = "make.sh",
+		cpp = "arduino.sh",
+		c = "arduino.sh",
+		hpp = "arduino.sh",
+		h = "arduino.sh",
+		arduino = "arduino.sh",
 
-		zig = "zig.sh",
+		zig = "zigrun.sh",
 
-		python = "python.sh"
+		python = "python.sh",
+
+		rust = "rust.sh",
+
+		elixir = "elixir.sh"
 	}
 
 	local scripts_dir = vim.fn.stdpath("config") .. "/scripts/"
 	local filetype = vim.bo.filetype
 	local filename = vim.fn.expand("%s")
 
+	if filename:sub(#filename - 2) == "str" then
+		vim.cmd("StrudelExecute")
+		return
+	end
+
 	vim.print(scripts_dir .. lookup[filetype])
 	vim.print(os.getenv("TERM") or "alacritty")
+
 
 	vim.uv.spawn(os.getenv("TERM") or "alacritty", {
 		detached = true,

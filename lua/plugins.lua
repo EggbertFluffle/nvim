@@ -9,8 +9,7 @@ vim.cmd("colorscheme gruber-darker")
 vim.pack.add({ "https://github.com/folke/snacks.nvim" })
 require("snacks").setup({
 	picker = {
-		layout = "ivy",
-		win = {
+		layout = "ivy", win = {
 			input = {
 				keys = {
 					["<Esc>"] = { "close", mode = { "n", "i" } },
@@ -118,20 +117,19 @@ vim.lsp.enable({
 	"lua_ls",
 	"zls",
 	"clangd",
-	"svelte-language-server",
 	"tinymist",
-	"typescript-langauge-server",
-	-- "harper_ls"
+	"svelte",
+	"ts_ls",
+	"html",
+	"cssls",
+	"elixirls",
+	"rust_analyzer"
 })
 vim.lsp.log_levels = "off"
 
--- vim.lsp.config('harper_ls', {
--- 	settings = {
--- 		["harper-ls"] = {
--- 			userDictPath = "~/dict.txt"
--- 		}
--- 	},
--- })
+vim.lsp.config('elixirls', {
+    cmd = { "/home/eggbert/.local/src/elixir-ls/language_server.sh" }
+})
 
 vim.keymap.set("n", "gD", picker.lsp_declarations)
 vim.keymap.set("n", "gd", picker.lsp_definitions)
@@ -193,7 +191,9 @@ vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename)
 -------------------- Blink.cmp --------------------
 vim.pack.add({ "https://github.com/saghen/blink.cmp" })
 require("blink.cmp").setup({
-	build = "cargo --release build",
+	fuzzy = {
+		implementation = "lua",
+	},
 	completion = {
 		documentation = {
 			auto_show = true,
@@ -213,9 +213,20 @@ require("blink.cmp").setup({
 vim.pack.add({ "https://github.com/chomosuke/typst-preview.nvim" })
 require("typst-preview").setup()
 
--------------------- Ethersync --------------------
--- vim.pack.add({ "https://github.com/ethersync/ethersync-nvim" })
---
--- vim.keymap.set('n', '<leader>ej', '<cmd>EthersyncJumpToCursor<cr>')
--- vim.keymap.set('n', '<leader>ef', '<cmd>EthersyncFollow<cr>')
--- vim.keymap.set('n', '<esc>', '<cmd>EthersyncUnfollow<cr>')
+-------------------- Triforce --------------------
+vim.pack.add({ 
+	"https://github.com/nvzone/volt",
+	"https://github.com/gisketch/triforce.nvim"
+})
+require("triforce").setup({})
+
+-------------------- Strudel --------------------
+vim.pack.add({ "https://github.com/gruvw/strudel.nvim" })
+require("strudel").setup()
+
+-------------------- BeepBoop.nvim --------------------
+vim.pack.add({ "beepboop.nvim" })
+-- require("beepboop").setup({
+-- 	binary_path = "/home/eggbert/programs/lua/beepboop.nvim/zig-out/bin/",
+-- 	theme = "https://github.com/EggbertFluffle/mingleburb.beepboop"
+-- })
