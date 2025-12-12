@@ -18,7 +18,7 @@ vim.keymap.set("n", "<C-Enter>", function ()
 		h = "arduino.sh",
 		arduino = "arduino.sh",
 
-		zig = "zigrun.sh",
+		zig = "zig.sh",
 
 		python = "python.sh",
 

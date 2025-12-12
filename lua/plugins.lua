@@ -1,12 +1,30 @@
------------------- Colorschemes --------------------
-vim.pack.add({ "https://github.com/ellisonleao/gruvbox.nvim" })
-vim.pack.add({ "https://github.com/ficcdaf/ashen.nvim" })
-vim.pack.add({ "https://github.com/blazkowolf/gruber-darker.nvim" })
+vim.pack.add({
+	"https://github.com/ellisonleao/gruvbox.nvim",
+	"https://github.com/ficcdaf/ashen.nvim",
+	"https://github.com/blazkowolf/gruber-darker.nvim",
+	"https://github.com/rktjmp/lush.nvim",
+	"https://github.com/zenbones-theme/zenbones.nvim",
+	"https://github.com/folke/snacks.nvim",
+	"https://github.com/folke/trouble.nvim",
+	"https://github.com/NStefan002/donut.nvim",
+	"https://github.com/stevearc/oil.nvim",
+	"https://github.com/windwp/nvim-autopairs",
+	"https://github.com/vyfor/cord.nvim",
+	"https://github.com/OXY2DEV/markview.nvim",
+	"https://github.com/nvim-treesitter/nvim-treesitter",
+	"https://github.com/neovim/nvim-lspconfig",
+	"https://github.com/saghen/blink.cmp",
+	"https://github.com/chomosuke/typst-preview.nvim",
+	"https://github.com/nvzone/volt",
+	"https://github.com/gisketch/triforce.nvim",
+	"https://github.com/gruvw/strudel.nvim",
+	"https://github.com/petermused/subway-surfers.nvim",
+})
 
-vim.cmd("colorscheme gruber-darker")
+------------------ Colorschemes --------------------
+vim.cmd("colorscheme zenbones")
 
 -------------------- Snacks.Picker --------------------
-vim.pack.add({ "https://github.com/folke/snacks.nvim" })
 require("snacks").setup({
 	picker = {
 		layout = "ivy", win = {
@@ -22,28 +40,26 @@ require("snacks").setup({
 })
 
 local picker = require("snacks").picker;
-vim.keymap.set("n", "<leader>pf", function () picker.files() end)
+vim.keymap.set("n", "<leader>pf", function () picker.smart() end)
 vim.keymap.set("n", "<leader>ps", function () picker.grep() end)
+vim.keymap.set("n", "<leader>pd", function () picker.lsp_symbols({ filter = { default = { "Function", "Method", "Class" } } }) end)
 vim.keymap.set("n", "<leader>pk", function () picker.keymaps() end)
 vim.keymap.set("n", "<leader>pi", function () picker.icons() end)
 
 vim.keymap.set("n", "<leader>pp", function () picker() end)
 
 -------------------- Trouble --------------------
-vim.pack.add({ "https://github.com/folke/trouble.nvim" })
 require("trouble").setup()
 vim.keymap.set("n", "<leader>ce", function() require("trouble").toggle("diagnostics") end)
 vim.keymap.set("n", "<leader>cs", function() require("trouble").toggle("symbols") end)
 
 -------------------- Donut --------------------
-vim.pack.add({ "https://github.com/NStefan002/donut.nvim" })
 require("donut").setup({
 	timeout = 180,
 	sunc_donuts = true,
 })
 
 -------------------- Oil --------------------
-vim.pack.add({ "https://github.com/stevearc/oil.nvim" })
 require("oil").setup({
 	default_file_explorer = true,
 	columns = {
@@ -63,14 +79,12 @@ require("oil").setup({
 vim.keymap.set("n", "<leader>pv", "<CMD>Oil<CR>")
 
 -------------------- Autopairs --------------------
-vim.pack.add({ "https://github.com/windwp/nvim-autopairs" })
 require("nvim-autopairs").setup({
 	map_bs = false,
 	map_cr = false
 })
 
 -------------------- Cord --------------------
-vim.pack.add({ "https://github.com/vyfor/cord.nvim" })
 require("cord").setup()
 vim.api.nvim_create_autocmd("PackChanged", {
 	callback = function(opts)
@@ -81,18 +95,16 @@ vim.api.nvim_create_autocmd("PackChanged", {
 })
 
 -------------------- Markview --------------------
-vim.pack.add({ "https://github.com/OXY2DEV/markview.nvim" })
-require("markview").setup({
-	preview = {
-		enable = true,
-	},
-	typst = {
-		enabled = false,
-	}
-})
+-- require("markview").setup({
+-- 	preview = {
+-- 		enable = true,
+-- 	},
+-- 	typst = {
+-- 		enabled = false,
+-- 	}
+-- })
 
 -------------------- Treesitter --------------------
-vim.pack.add({ "https://github.com/nvim-treesitter/nvim-treesitter" })
 require("nvim-treesitter.configs").setup({
 	ensure_installed = {
 		"c",
@@ -112,7 +124,6 @@ require("nvim-treesitter.configs").setup({
 })
 
 -------------------- LSP --------------------
-vim.pack.add({ "https://github.com/neovim/nvim-lspconfig" })
 vim.lsp.enable({
 	"lua_ls",
 	"zls",
@@ -189,7 +200,6 @@ vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename)
 -- end, { expr = true })
 
 -------------------- Blink.cmp --------------------
-vim.pack.add({ "https://github.com/saghen/blink.cmp" })
 require("blink.cmp").setup({
 	fuzzy = {
 		implementation = "lua",
@@ -210,23 +220,20 @@ require("blink.cmp").setup({
 })
 
 -------------------- Typst Preview --------------------
-vim.pack.add({ "https://github.com/chomosuke/typst-preview.nvim" })
 require("typst-preview").setup()
 
 -------------------- Triforce --------------------
-vim.pack.add({ 
-	"https://github.com/nvzone/volt",
-	"https://github.com/gisketch/triforce.nvim"
-})
 require("triforce").setup({})
 
 -------------------- Strudel --------------------
-vim.pack.add({ "https://github.com/gruvw/strudel.nvim" })
 require("strudel").setup()
 
 -------------------- BeepBoop.nvim --------------------
-vim.pack.add({ "beepboop.nvim" })
+-- vim.pack.add({ "beepboop.nvim" })
 -- require("beepboop").setup({
 -- 	binary_path = "/home/eggbert/programs/lua/beepboop.nvim/zig-out/bin/",
 -- 	theme = "https://github.com/EggbertFluffle/mingleburb.beepboop"
 -- })
+
+-------------------- Subway-Surfers.nvim --------------------
+require("subway-surfers").setup()
