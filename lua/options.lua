@@ -9,7 +9,6 @@ vim.o.tabstop = 4
 vim.o.shiftwidth = 4
 vim.o.smartindent = true
 
-
 vim.o.hlsearch = false
 vim.o.incsearch = true
 vim.o.ignorecase = true

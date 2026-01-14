@@ -1,9 +1,5 @@
 vim.pack.add({
-	"https://github.com/ellisonleao/gruvbox.nvim",
-	"https://github.com/ficcdaf/ashen.nvim",
 	"https://github.com/blazkowolf/gruber-darker.nvim",
-	"https://github.com/rktjmp/lush.nvim",
-	"https://github.com/zenbones-theme/zenbones.nvim",
 	"https://github.com/folke/snacks.nvim",
 	"https://github.com/folke/trouble.nvim",
 	"https://github.com/NStefan002/donut.nvim",
@@ -14,15 +10,11 @@ vim.pack.add({
 	"https://github.com/nvim-treesitter/nvim-treesitter",
 	"https://github.com/neovim/nvim-lspconfig",
 	"https://github.com/saghen/blink.cmp",
-	"https://github.com/chomosuke/typst-preview.nvim",
-	"https://github.com/nvzone/volt",
-	"https://github.com/gisketch/triforce.nvim",
-	"https://github.com/gruvw/strudel.nvim",
-	"https://github.com/petermused/subway-surfers.nvim",
+	"https://github.com/chomosuke/typst-preview.nvim"
 })
 
 ------------------ Colorschemes --------------------
-vim.cmd("colorscheme zenbones")
+vim.cmd("colorscheme gruber-darker")
 
 -------------------- Snacks.Picker --------------------
 require("snacks").setup({
@@ -105,7 +97,7 @@ vim.api.nvim_create_autocmd("PackChanged", {
 -- })
 
 -------------------- Treesitter --------------------
-require("nvim-treesitter.configs").setup({
+require("nvim-treesitter.").setup({
 	ensure_installed = {
 		"c",
 		"cpp",
@@ -113,10 +105,14 @@ require("nvim-treesitter.configs").setup({
 		"vim",
 		"javascript",
 		"html",
-		"typescript",
 		"css",
+		"svelte",
+		"typescript",
 		"zig",
-		"typst"
+		"typst",
+		"fennel",
+		"haskell",
+		"bash"
 	},
 	sync_install = false,
 	highlight = { enable = true },
@@ -134,13 +130,18 @@ vim.lsp.enable({
 	"html",
 	"cssls",
 	"elixirls",
-	"rust_analyzer"
+	"rust_analyzer",
+	"jdtls",
+	"fennel_ls",
+	"hls"
 })
 vim.lsp.log_levels = "off"
 
 vim.lsp.config('elixirls', {
     cmd = { "/home/eggbert/.local/src/elixir-ls/language_server.sh" }
 })
+
+-- vim.lsp.config("fennel-ls")
 
 vim.keymap.set("n", "gD", picker.lsp_declarations)
 vim.keymap.set("n", "gd", picker.lsp_definitions)
@@ -222,18 +223,9 @@ require("blink.cmp").setup({
 -------------------- Typst Preview --------------------
 require("typst-preview").setup()
 
--------------------- Triforce --------------------
-require("triforce").setup({})
-
--------------------- Strudel --------------------
-require("strudel").setup()
-
 -------------------- BeepBoop.nvim --------------------
 -- vim.pack.add({ "beepboop.nvim" })
 -- require("beepboop").setup({
 -- 	binary_path = "/home/eggbert/programs/lua/beepboop.nvim/zig-out/bin/",
 -- 	theme = "https://github.com/EggbertFluffle/mingleburb.beepboop"
 -- })
-
--------------------- Subway-Surfers.nvim --------------------
-require("subway-surfers").setup()

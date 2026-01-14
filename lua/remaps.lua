@@ -11,20 +11,18 @@ vim.keymap.set("n", "C", "ciw")
 vim.keymap.set("n", "<C-Enter>", function ()
 	local lookup = {
 		lua = "lua.sh",
-
+		sh = "sh.sh",
 		cpp = "arduino.sh",
 		c = "arduino.sh",
 		hpp = "arduino.sh",
 		h = "arduino.sh",
 		arduino = "arduino.sh",
-
 		zig = "zig.sh",
-
 		python = "python.sh",
-
 		rust = "rust.sh",
-
-		elixir = "elixir.sh"
+		elixir = "elixir.sh",
+		fennel = "fennel.sh",
+		haskell = "haskell.sh"
 	}
 
 	local scripts_dir = vim.fn.stdpath("config") .. "/scripts/"
@@ -39,9 +37,15 @@ vim.keymap.set("n", "<C-Enter>", function ()
 	vim.print(scripts_dir .. lookup[filetype])
 	vim.print(os.getenv("TERM") or "alacritty")
 
-
 	vim.uv.spawn(os.getenv("TERM") or "alacritty", {
 		detached = true,
 		args = { "--command", scripts_dir .. lookup[filetype], filename }
 	}, function () end)
 end)
+
+vim.api.nvim_create_user_command("Blame", function ()
+	local file = vim.fn.expand('%:p')
+	local line = vim.api.nvim_get_current_line()
+
+	vim.cmd("!git blame " .. file .. " | grep '" .. line .. "' -C 3")
+end, {})
