@@ -112,7 +112,8 @@ require("nvim-treesitter.").setup({
 		"typst",
 		"fennel",
 		"haskell",
-		"bash"
+		"bash",
+		"gdscript"
 	},
 	sync_install = false,
 	highlight = { enable = true },
@@ -133,7 +134,8 @@ vim.lsp.enable({
 	"rust_analyzer",
 	"jdtls",
 	"fennel_ls",
-	"hls"
+	"hls",
+	"gdscript"
 })
 vim.lsp.log_levels = "off"
 
