@@ -6,11 +6,11 @@ vim.pack.add({
 	"https://github.com/stevearc/oil.nvim",
 	"https://github.com/windwp/nvim-autopairs",
 	"https://github.com/vyfor/cord.nvim",
-	"https://github.com/OXY2DEV/markview.nvim",
 	"https://github.com/nvim-treesitter/nvim-treesitter",
 	"https://github.com/neovim/nvim-lspconfig",
 	"https://github.com/saghen/blink.cmp",
-	"https://github.com/chomosuke/typst-preview.nvim"
+	"https://github.com/chomosuke/typst-preview.nvim",
+	"https://github.com/lewis6991/gitsigns.nvim"
 })
 
 ------------------ Colorschemes --------------------
@@ -86,16 +86,6 @@ vim.api.nvim_create_autocmd("PackChanged", {
 	end
 })
 
--------------------- Markview --------------------
--- require("markview").setup({
--- 	preview = {
--- 		enable = true,
--- 	},
--- 	typst = {
--- 		enabled = false,
--- 	}
--- })
-
 -------------------- Treesitter --------------------
 require("nvim-treesitter.").setup({
 	ensure_installed = {
@@ -135,7 +125,8 @@ vim.lsp.enable({
 	"jdtls",
 	"fennel_ls",
 	"hls",
-	"gdscript"
+	"gdscript",
+	"tailwindcss"
 })
 vim.lsp.log_levels = "off"
 
@@ -150,57 +141,6 @@ vim.keymap.set("n", "gd", picker.lsp_definitions)
 vim.keymap.set("n", "gi", picker.lsp_implementations)
 vim.keymap.set("n", "gr", picker.lsp_references)
 vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename)
-
--- vim.api.nvim_create_autocmd('LspAttach', {
--- 	group = vim.api.nvim_create_augroup('my.lsp', {}),
--- 	callback = function(ev)
--- 		local client = assert(vim.lsp.get_client_by_id(ev.data.client_id))
---
--- 		if client:supports_method('textDocument/completion') then
--- 			local chars = {}; for i = 32, 126 do table.insert(chars, string.char(i)) end
--- 			client.server_capabilities.completionProvider.triggerCharacters = chars
---
--- 			vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
--- 		end
---
--- 		local opts = { buffer = ev.buf }
--- 		vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
--- 		vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
--- 		vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
--- 		vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
--- 		vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
--- 	end,
--- })
--- vim.opt.updatetime = 250
--- vim.opt.completeopt = { "menu", "menuone", "noinsert", "noselect" }
---
--- vim.keymap.set("i", "<C-Space>", function ()
--- 	vim.lsp.completion.get()
--- end)
---
--- vim.keymap.set("i", "<C-j>", function ()
--- 	if vim.fn.pumvisible() == 1 then
--- 		return "<C-n>"
--- 	else
--- 		return "<C-j>"
--- 	end
--- end, { expr = true })
---
--- vim.keymap.set("i", "<C-k>", function ()
--- 	if vim.fn.pumvisible() == 1 then
--- 		return "<C-p>"
--- 	else
--- 		return "<C-k>"
--- 	end
--- end, { expr = true })
---
--- vim.keymap.set("i", "<Tab>", function ()
--- 	if vim.fn.pumvisible() == 1 then
--- 		return "<C-y>"
--- 	else
--- 		return "<Tab>"
--- 	end
--- end, { expr = true })
 
 -------------------- Blink.cmp --------------------
 require("blink.cmp").setup({
@@ -224,6 +164,9 @@ require("blink.cmp").setup({
 
 -------------------- Typst Preview --------------------
 require("typst-preview").setup()
+
+-------------------- gitsigns.nvim --------------------
+require("gitsigns").setup()
 
 -------------------- BeepBoop.nvim --------------------
 -- vim.pack.add({ "beepboop.nvim" })
