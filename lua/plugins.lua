@@ -14,6 +14,23 @@ vim.pack.add({
 	{ src = "https://github.com/saghen/blink.cmp", version = "v1.10.2" }
 })
 
+local update = function ()
+	vim.pack.update({
+		"gruber-darker.nvim",
+		"snacks.nvim",
+		"trouble.nvim",
+		"donut.nvim",
+		"oil.nvim",
+		"nvim-autopairs",
+		"cord.nvim",
+		"nvim-lspconfig",
+		"typst-preview.nvim",
+		"gitsigns.nvim",
+		"nvim-colorizer.lua"
+	})
+end
+vim.api.nvim_create_user_command("UpdatePlugins", update, {})
+
 ------------------ Colorschemes --------------------
 vim.cmd("colorscheme gruber-darker")
 
@@ -87,6 +104,7 @@ vim.api.nvim_create_autocmd("PackChanged", {
 	end
 })
 
+<<<<<<< HEAD
 -------------------- Treesitter --------------------
 require("nvim-treesitter").setup({
 	ensure_installed = {
@@ -135,32 +153,50 @@ vim.lsp.config('elixirls', {
     cmd = { "/home/eggbert/.local/src/elixir-ls/language_server.sh" }
 })
 
--- vim.lsp.config("fennel-ls")
-
 vim.keymap.set("n", "gD", picker.lsp_declarations)
 vim.keymap.set("n", "gd", picker.lsp_definitions)
 vim.keymap.set("n", "gi", picker.lsp_implementations)
 vim.keymap.set("n", "gr", picker.lsp_references)
 vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename)
 
--------------------- Blink.cmp --------------------
-require("blink.cmp").setup({
-	fuzzy = {
-		implementation = "lua",
-	},
-	completion = {
-		documentation = {
-			auto_show = true,
-		},
-	},
-	keymap = {
-		preset = "none",
-		["<C-j>"] = { "select_next", "fallback" },
-		["<C-k>"] = { "select_prev", "fallback" },
-		["<Tab>"] = { "select_and_accept", "fallback" },
-		["<C-n>"] = { "scroll_documentation_down", "fallback" },
-		["<C-p>"] = { "scroll_documentation_up", "fallback" },
-	}
+-------------------- Completion --------------------
+vim.api.nvim_create_autocmd("LspAttach", {
+	callback = function(ctx)
+		local client = vim.lsp.get_client_by_id(ctx.data.client_id)
+		if not client or not client:supports_method("textDocument/completion") then
+			return
+		end
+
+		local trigger_characters = client.server_capabilities.completionProvider.triggerCharacters
+		if trigger_characters then
+			for i = 32, 127 do
+				local c = string.char(i)
+
+				if not table.contains(trigger_characters, c) then
+					table.insert(trigger_characters, c)
+				end
+			end
+		end
+
+		vim.keymap.set("i", "<C-j>", function()
+			return vim.fn.pumvisible() == 1 and "<C-n>" or "<C-j>"
+		end, { expr = true, buf = ctx.buf })
+
+		vim.keymap.set("i", "<C-k>", function()
+			return vim.fn.pumvisible() == 1 and "<C-p>" or "<C-k>"
+		end, { expr = true, buf = ctx.buf })
+
+		vim.keymap.set("i", "<Tab>", function()
+			return vim.fn.pumvisible() == 1 and "<C-y>" or "<Tab>"
+		end, { expr = true, buf = ctx.buf })
+
+		vim.lsp.completion.enable(true, client.id, ctx.buf, {
+			autotrigger = true,
+			convert = function(item)
+				return { abbr = item.label:gsub("%b()", "") }
+			end,
+		})
+	end
 })
 
 -------------------- Typst Preview --------------------
@@ -169,9 +205,20 @@ require("typst-preview").setup()
 -------------------- gitsigns.nvim --------------------
 require("gitsigns").setup()
 
+-------------------- mason.nvim --------------------
+require("mason").setup()
+
 -------------------- BeepBoop.nvim --------------------
 -- vim.pack.add({ "beepboop.nvim" })
 -- require("beepboop").setup({
 -- 	binary_path = "/home/eggbert/programs/lua/beepboop.nvim/zig-out/bin/",
 -- 	theme = "https://github.com/EggbertFluffle/mingleburb.beepboop"
 -- })
+
+-------------------- youreit.nvim --------------------
+-- require("youreit").setup({
+-- 	username = "Eggbert"
+-- })
+
+-------------------- glop.nvim --------------------
+-- require("glop").setup()
