@@ -6,11 +6,12 @@ vim.pack.add({
 	"https://github.com/stevearc/oil.nvim",
 	"https://github.com/windwp/nvim-autopairs",
 	"https://github.com/vyfor/cord.nvim",
-	"https://github.com/nvim-treesitter/nvim-treesitter",
+	{ src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "master" },
 	"https://github.com/neovim/nvim-lspconfig",
-	"https://github.com/saghen/blink.cmp",
 	"https://github.com/chomosuke/typst-preview.nvim",
-	"https://github.com/lewis6991/gitsigns.nvim"
+	"https://github.com/lewis6991/gitsigns.nvim",
+	"https://github.com/saghen/blink.lib",
+	{ src = "https://github.com/saghen/blink.cmp", version = "v1.10.2" }
 })
 
 ------------------ Colorschemes --------------------
@@ -87,7 +88,7 @@ vim.api.nvim_create_autocmd("PackChanged", {
 })
 
 -------------------- Treesitter --------------------
-require("nvim-treesitter.").setup({
+require("nvim-treesitter").setup({
 	ensure_installed = {
 		"c",
 		"cpp",
