@@ -13,7 +13,7 @@ vim.keymap.set("n", "<C-Enter>", function ()
 		lua = "lua.sh",
 		sh = "sh.sh",
 		cpp = "arduino.sh",
-		c = "arduino.sh",
+		c = "make.sh",
 		hpp = "arduino.sh",
 		h = "arduino.sh",
 		arduino = "arduino.sh",
@@ -22,7 +22,10 @@ vim.keymap.set("n", "<C-Enter>", function ()
 		rust = "rust.sh",
 		elixir = "elixir.sh",
 		fennel = "fennel.sh",
-		haskell = "haskell.sh"
+		haskell = "haskell.sh",
+		typst = "typst.sh",
+		javascript = "javascript.sh",
+		typescript = "javascript.sh"
 	}
 
 	local scripts_dir = vim.fn.stdpath("config") .. "/scripts/"
