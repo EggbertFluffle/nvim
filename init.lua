@@ -1,8 +1,3 @@
-require("options")
-require("plugins")
-require("remaps")
-require("autocmd")
-
 ---@param any[]
 ---@param any
 ---@return bool
@@ -12,3 +7,8 @@ table.contains = function(list, val)
 	end
 	return false
 end
+
+require("options")
+require("plugins")
+require("remaps")
+require("autocmd")

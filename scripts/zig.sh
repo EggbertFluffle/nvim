@@ -3,7 +3,7 @@
 pwd
 echo "-------------------------------"
 if [ -f "build.zig" ]; then
-	zig build run
+	zig build
 else
 	zig run $1
 fi
