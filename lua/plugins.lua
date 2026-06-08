@@ -6,12 +6,13 @@ vim.pack.add({
 	"https://github.com/stevearc/oil.nvim",
 	"https://github.com/windwp/nvim-autopairs",
 	"https://github.com/vyfor/cord.nvim",
-	{ src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "master" },
+	{ src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
 	"https://github.com/neovim/nvim-lspconfig",
 	"https://github.com/chomosuke/typst-preview.nvim",
 	"https://github.com/lewis6991/gitsigns.nvim",
 	"https://github.com/saghen/blink.cmp",
-	"https://github.com/saghen/blink.lib"
+	"https://github.com/saghen/blink.lib",
+	-- "https://github.com/rachartier/tiny-glimmer.nvim"
 }, { confirm = false })
 
 local update = function ()
@@ -61,7 +62,6 @@ vim.keymap.set("n", "<leader>pp", function () picker() end)
 -------------------- Trouble --------------------
 require("trouble").setup()
 vim.keymap.set("n", "<leader>ce", function() require("trouble").toggle("diagnostics") end)
-vim.keymap.set("n", "<leader>cs", function() require("trouble").toggle("symbols") end)
 
 -------------------- Donut --------------------
 require("donut").setup({
@@ -147,7 +147,7 @@ vim.api.nvim_create_autocmd('FileType', {
 		pcall(vim.treesitter.start, ev.buf)
 
 		-- indenting
-		vim.bo[ev.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+		-- vim.bo[ev.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 	end,
 })
 
@@ -249,12 +249,15 @@ require("gitsigns").setup()
 
 -------------------- BeepBoop.nvim --------------------
 -- Local dev override — comment out the vim.pack line and use this instead
-vim.opt.rtp:prepend("/home/eggbert/programs/lua/beepboop.nvim")
--- vim.pack.add({ "https://github.com/EggbertFluffle/beepboop.nvim" })
+-- vim.opt.rtp:prepend("/home/eggbert/programs/lua/beepboop.nvim")
+
+vim.pack.add({ { src = "https://github.com/EggbertFluffle/beepboop.nvim", version = "main" } })
 
 require("beepboop").setup({
+	-- mute = true,
 	get_binary_method = "download",
-	theme = "https://github.com/EggbertFluffle/mingleburb.beepboop",
+	-- binary_path = "/home/eggbert/programs/zig/boopbeep/zig-out/bin/boopbeep",
+	theme = "/home/eggbert/programs/lua/beepboop_themes/typewriter.beepboop/"
 })
 
 -------------------- youreit.nvim --------------------

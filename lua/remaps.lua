@@ -12,7 +12,7 @@ vim.keymap.set("n", "<C-Enter>", function ()
 	local lookup = {
 		lua = "lua.sh",
 		sh = "sh.sh",
-		cpp = "arduino.sh",
+		cpp = "make.sh",
 		c = "make.sh",
 		hpp = "arduino.sh",
 		h = "arduino.sh",
@@ -31,11 +31,6 @@ vim.keymap.set("n", "<C-Enter>", function ()
 	local scripts_dir = vim.fn.stdpath("config") .. "/scripts/"
 	local filetype = vim.bo.filetype
 	local filename = vim.fn.expand("%s")
-
-	if filename:sub(#filename - 2) == "str" then
-		vim.cmd("StrudelExecute")
-		return
-	end
 
 	vim.print(scripts_dir .. lookup[filetype])
 	vim.print(os.getenv("TERM") or "alacritty")
