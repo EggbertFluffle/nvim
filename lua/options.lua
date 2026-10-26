@@ -20,7 +20,7 @@ vim.o.scrolloff = 8
 vim.o.sidescrolloff = 16
 vim.o.wrap = false
 
-vim.opt.completeopt = { "menuone", "noinsert", "popup" } 
+vim.opt.completeopt = { "menuone", "noinsert" }
 
 vim.o.swapfile = false
 vim.o.backup = false

@@ -11,11 +11,12 @@ vim.keymap.set("n", "C", "ciw")
 vim.keymap.set("n", "<C-Enter>", function ()
 	local lookup = {
 		lua = "lua.sh",
+		luau = "luau.sh",
 		sh = "sh.sh",
 		cpp = "make.sh",
 		c = "make.sh",
 		hpp = "arduino.sh",
-		h = "arduino.sh",
+		h = "make.sh",
 		arduino = "arduino.sh",
 		zig = "zig.sh",
 		python = "python.sh",
@@ -25,7 +26,9 @@ vim.keymap.set("n", "<C-Enter>", function ()
 		haskell = "haskell.sh",
 		typst = "typst.sh",
 		javascript = "javascript.sh",
-		typescript = "javascript.sh"
+		java = "java.sh",
+		typescript = "javascript.sh",
+		qml = "quickshell.sh"
 	}
 
 	local scripts_dir = vim.fn.stdpath("config") .. "/scripts/"
@@ -33,12 +36,13 @@ vim.keymap.set("n", "<C-Enter>", function ()
 	local filename = vim.fn.expand("%s")
 
 	vim.print(scripts_dir .. lookup[filetype])
-	vim.print(os.getenv("TERM") or "alacritty")
 
-	vim.uv.spawn(os.getenv("TERM") or "alacritty", {
+	vim.uv.spawn(os.getenv("TERM") or "footclient", {
 		detached = true,
-		args = { "--command", scripts_dir .. lookup[filetype], filename }
-	}, function () end)
+		args = { scripts_dir .. lookup[filetype], filename }
+	}, function (t) 
+		vim.print(t)
+	end)
 end)
 
 vim.api.nvim_create_user_command("Blame", function ()

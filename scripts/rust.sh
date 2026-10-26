@@ -2,6 +2,7 @@
 
 pwd
 echo "-------------------------------"
-cargo run
+# cargo run
+cargo build && sudo ./target/debug/mc_mitm
 echo "-------------------------------"
 bash

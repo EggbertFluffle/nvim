@@ -2,6 +2,6 @@
 
 pwd
 echo "-------------------------------"
-bun run index.tx
+npm run start
 echo "-------------------------------"
 bash

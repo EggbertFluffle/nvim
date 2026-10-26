@@ -1,7 +1,6 @@
 vim.pack.add({
 	"https://github.com/blazkowolf/gruber-darker.nvim",
 	"https://github.com/folke/snacks.nvim",
-	"https://github.com/folke/trouble.nvim",
 	"https://github.com/NStefan002/donut.nvim",
 	"https://github.com/stevearc/oil.nvim",
 	"https://github.com/windwp/nvim-autopairs",
@@ -12,25 +11,11 @@ vim.pack.add({
 	"https://github.com/lewis6991/gitsigns.nvim",
 	"https://github.com/saghen/blink.cmp",
 	"https://github.com/saghen/blink.lib",
-	-- "https://github.com/rachartier/tiny-glimmer.nvim"
+	"https://github.com/folke/trouble.nvim",
+	"https://github.com/nvim-lua/plenary.nvim",
+	"https://github.com/MunifTanjim/nui.nvim",
+	"https://github.com/kawre/leetcode.nvim"
 }, { confirm = false })
-
-local update = function ()
-	vim.pack.update({
-		"gruber-darker.nvim",
-		"snacks.nvim",
-		"trouble.nvim",
-		"donut.nvim",
-		"oil.nvim",
-		"nvim-autopairs",
-		"cord.nvim",
-		"nvim-lspconfig",
-		"typst-preview.nvim",
-		"gitsigns.nvim",
-		"nvim-colorizer.lua"
-	})
-end
-vim.api.nvim_create_user_command("UpdatePlugins", update, {})
 
 ------------------ Colorschemes --------------------
 vim.cmd("colorscheme gruber-darker")
@@ -51,17 +36,19 @@ require("snacks").setup({
 })
 
 local picker = require("snacks").picker;
-vim.keymap.set("n", "<leader>pf", function () picker.smart() end)
+vim.keymap.set("n", "<leader>pf", function () picker.files() end)
 vim.keymap.set("n", "<leader>ps", function () picker.grep() end)
 vim.keymap.set("n", "<leader>pd", function () picker.lsp_symbols({ filter = { default = { "Function", "Method", "Class" } } }) end)
 vim.keymap.set("n", "<leader>pk", function () picker.keymaps() end)
 vim.keymap.set("n", "<leader>pi", function () picker.icons() end)
 
+vim.keymap.set("n", "<C-/>", function () picker.lines() end)
+
 vim.keymap.set("n", "<leader>pp", function () picker() end)
 
 -------------------- Trouble --------------------
 require("trouble").setup()
-vim.keymap.set("n", "<leader>ce", function() require("trouble").toggle("diagnostics") end)
+vim.keymap.set("n", "<leader>ce", "<cmd>Trouble diagnostics toggle<cr>")
 
 -------------------- Donut --------------------
 require("donut").setup({
@@ -74,17 +61,113 @@ require("oil").setup({
 	default_file_explorer = true,
 	columns = {
 		"permissions",
-		"size",
-		"icon"
+		"size"
 	},
-	constrain_cursor = "name",
+	constrain_cursor = "editable",
+	skip_confirm_for_simple_edits = true,
+	watch_for_change = true,
 	view_options = {
 		show_hidden = true,
 		natural_order = true,
 	},
+	float = {
+		preview_split = "right"
+	},
 	preview_win = {
-		preview_method = "fast_scratch"
+		preview_method = "fast_scratch",
+		preview_split = "right"
+	},
+	keymaps = {
+		["_"] = false,
+		["<CR>"] = {
+			callback = function()
+				local oil = require("oil")
+				local entry = oil.get_cursor_entry()
+
+				if not entry then
+					return
+				end
+
+				local media_ext = {
+					-- images
+					png = true, jpg = true, jpeg = true, gif = true, webp = true, bmp = true, svg = true,
+					-- videos
+					mp4 = true, mkv = true, mov = true, avi = true, webm = true, flv = true, ogg = true,
+					-- other
+					pdf = true,
+				}
+
+				local ext = entry.name:match("^.+%.(.+)$")
+				ext = ext and ext:lower()
+
+				if entry.type == "file" and ext and media_ext[ext] then
+					local dir = oil.get_current_dir()
+					local path = dir .. entry.name
+					vim.ui.open(path)
+					return
+				end
+
+				-- fall back to default oil behavior for everything else
+				require("oil.actions").select.callback()
+			end,
+			desc = "Open media externally, otherwise default oil select",
+		},
 	}
+})
+
+-- I would like to thank claude for this wonderful addition to oil
+vim.api.nvim_create_autocmd("User", {
+	pattern = "OilActionsPost",
+	callback = function(event)
+		local image_ext = {
+			png = true, jpg = true, jpeg = true, gif = true,
+			bmp = true, webp = true, tiff = true, tif = true,
+			heic = true, avif = true,
+		}
+
+		local im_cmd = vim.fn.executable("magick") == 1 and "magick" or "convert"
+
+		for _, action in ipairs(event.data.actions) do
+			if action.type == "move" then
+				local src = action.src_url:gsub("^oil://", "")
+				local dest = action.dest_url:gsub("^oil://", "")
+				local src_ext = src:match("^.+%.([^.]+)$")
+				local dest_ext = dest:match("^.+%.([^.]+)$")
+				src_ext = src_ext and src_ext:lower()
+				dest_ext = dest_ext and dest_ext:lower()
+
+				if src_ext and dest_ext and src_ext ~= dest_ext
+					and image_ext[src_ext] and image_ext[dest_ext] then
+					local tmp = dest .. ".converting.tmp"
+
+					vim.system(
+						{ im_cmd, dest, tmp },
+						{ text = true },
+						function(res)
+							vim.schedule(function()
+								if res.code == 0 then
+									os.rename(tmp, dest)
+									vim.notify(
+										("Converted %s -> .%s"):format(
+											vim.fn.fnamemodify(src, ":t"),
+											dest_ext
+										),
+										vim.log.levels.INFO
+									)
+								else
+									os.remove(tmp)
+									vim.notify(
+										"ImageMagick conversion failed:\n" .. (res.stderr or ""),
+										vim.log.levels.ERROR
+									)
+								end
+							end)
+						end
+					)
+				end
+			end
+		end
+	end,
 })
 vim.keymap.set("n", "<leader>pv", "<CMD>Oil<CR>")
 
@@ -154,6 +237,8 @@ vim.api.nvim_create_autocmd('FileType', {
 -------------------- LSP --------------------
 vim.lsp.enable({
 	"lua_ls",
+	"pylsp",
+	"luau_lsp",
 	"zls",
 	"clangd",
 	"tinymist",
@@ -226,9 +311,16 @@ require("blink.cmp").setup({
 	fuzzy = {
 		implementation = "lua",
 	},
+	sources = {
+		default = { "lsp", "path", "snippets", "buffer" },
+	},
 	completion = {
 		documentation = {
 			auto_show = true,
+		},
+		trigger = {
+			show_on_keyword = true,
+			show_on_insert_on_trigger_character = true,
 		},
 	},
 	keymap = {
@@ -257,13 +349,10 @@ require("beepboop").setup({
 	-- mute = true,
 	get_binary_method = "download",
 	-- binary_path = "/home/eggbert/programs/zig/boopbeep/zig-out/bin/boopbeep",
-	theme = "/home/eggbert/programs/lua/beepboop_themes/typewriter.beepboop/"
+	theme = "https://github.com/EggbertFluffle/typewriter.beepboop"
 })
 
--------------------- youreit.nvim --------------------
--- require("youreit").setup({
--- 	username = "Eggbert"
--- })
-
--------------------- glop.nvim --------------------
--- require("glop").setup()
+-------------------- leetcode.nvim --------------------
+require("leetcode").setup({
+	lang = "c"
+})
