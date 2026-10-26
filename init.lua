@@ -1,14 +1,12 @@
----@param any[]
----@param any
----@return bool
-table.contains = function(list, val)
-	for i, v in ipairs(list) do
-		if v == val then return true end
-	end
-	return false
+local tmpfile = "/tmp/lua_fennel_conf"
+local config = "~/.config/nvim/start.fnl"
+local exit = os.execute("fennel -c " .. config .. " > " .. tmpfile .. " 2> " .. tmpfile)
+local file, err = io.open(tmpfile, "r")
+if err then error(err) end
+local output = file:read("*a")
+
+if exit ~= 0 then 
+	error(output)
 end
 
-require("options")
-require("plugins")
-require("remaps")
-require("autocmd")
+dofile(tmpfile)
