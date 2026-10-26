@@ -1,3 +1,4 @@
+(tset vim.g :mapleader " ")
 (local opts {
 	   :number true
 	   :relativenumber true
@@ -24,25 +25,14 @@
 	   :undofile true})
 
 (each [key value (pairs opts)]
-	(tset vim.opt key value))
+  (tset vim.opt key value))
 
 (vim.pack.add 
   ["https://github.com/blazkowolf/gruber-darker.nvim"
-   "https://github.com/folke/snacks.nvim"
-   "https://github.com/NStefan002/donut.nvim"
    "https://github.com/stevearc/oil.nvim"
    "https://github.com/windwp/nvim-autopairs"
-   "https://github.com/vyfor/cord.nvim"
    { :src "https://github.com/nvim-treesitter/nvim-treesitter" :version "main" }
-   "https://github.com/neovim/nvim-lspconfig"
-   "https://github.com/chomosuke/typst-preview.nvim"
-   "https://github.com/lewis6991/gitsigns.nvim"
-   "https://github.com/saghen/blink.cmp"
-   "https://github.com/saghen/blink.lib"
-   "https://github.com/folke/trouble.nvim"
-   "https://github.com/nvim-lua/plenary.nvim"
-   "https://github.com/MunifTanjim/nui.nvim"
-   "https://github.com/kawre/leetcode.nvim"] 
+   "https://github.com/neovim/nvim-lspconfig"]
   { :confirm true })
 
 (vim.cmd "colorscheme gruber-darker")
@@ -56,12 +46,23 @@
 
 (tree-sitter.setup)
 (tree-sitter.install ["c" "cpp" "lua" "vim" "javascript" "html" "css" "svelte"
-			 "typescript" "zig" "typst" "fennel" "haskell" "bash" "gdscript"])
+					  "typescript" "zig" "typst" "fennel" "haskell" "bash" "gdscript"])
 
 (vim.api.nvim_create_autocmd 
   :FileType 
-  { :callback 
+  {:callback 
   (fn [args]
 	(when (pcall vim.treesitter.start args.buf)
 	  (tset vim.bo args.buf :indentexpr
 			"v:lua.require'nvim-treesitter'.indentexpr()")))})
+
+(setup "oil" {
+	   :default_file_explorer true
+	   :columns ["permissions" "size"]
+	   :constrain_cursor "editable"
+	   :skip_confirm_for_simple_edits true
+	   :watch_for_change true
+	   :view_options { :show_hidden true :natural_order true }
+	   :float { :preview_win "fast_scratch" :preview_split "right" }
+	   :keymaps { "_" false } })
+(vim.keymap.set "n" "<leader>pv" "<CMD>Oil<CR>")
